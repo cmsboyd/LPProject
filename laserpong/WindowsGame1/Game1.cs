@@ -30,6 +30,7 @@ namespace WindowsGame1
 
         public Game1()
         {
+            Window.Title = "Laser Pong";
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 768;
