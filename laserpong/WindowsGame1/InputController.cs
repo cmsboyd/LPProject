@@ -11,7 +11,8 @@ namespace WindowsGame1
 {
     class InputController
     {
-        public enum InputMode {
+        public enum InputMode
+        {
             Player1,
             Player2
         };
@@ -46,21 +47,22 @@ namespace WindowsGame1
 
             m_oldControllerState = new GamePadState[NUM_SUPPORTED_PLAYERS];
             m_newControllerState = new GamePadState[NUM_SUPPORTED_PLAYERS];
-      
+
         }
 
         public string getMode()
-        {   switch (m_Mode)
         {
+            switch (m_Mode)
+            {
 
-            case InputMode.Player1:
-            return "Player1";
-            case InputMode.Player2:
-            return "Player2";
+                case InputMode.Player1:
+                    return "Player1";
+                case InputMode.Player2:
+                    return "Player2";
 
-            default:
-            throw new NotImplementedException("Received unexpected input mode");
-        }
+                default:
+                    throw new NotImplementedException("Received unexpected input mode");
+            }
 
         }
 
@@ -71,7 +73,7 @@ namespace WindowsGame1
                 case InputMode.Player1:
                     return (m_newState.IsKeyDown(Keys.W) || m_newControllerState[0].ThumbSticks.Left.Y > 0);
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Up);
+                    return (m_newState.IsKeyDown(Keys.Up)|| m_newControllerState[1].ThumbSticks.Left.Y > 0);
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -84,7 +86,8 @@ namespace WindowsGame1
                 case InputMode.Player1:
                     return ((m_newState.IsKeyDown(Keys.W) && m_oldState.IsKeyUp(Keys.W)) || m_newControllerState[0].ThumbSticks.Left.Y > 0 && m_oldControllerState[0].ThumbSticks.Left.Y == 0);
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Up) &&  m_oldState.IsKeyUp(Keys.Up);
+                    return ((m_newState.IsKeyDown(Keys.Up) && m_oldState.IsKeyUp(Keys.Up)) || m_newControllerState[1].ThumbSticks.Left.Y > 0 && m_oldControllerState[1].ThumbSticks.Left.Y == 0);
+               ;
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -95,9 +98,9 @@ namespace WindowsGame1
             switch (m_Mode)
             {
                 case InputMode.Player1:
-                    return (m_newState.IsKeyDown(Keys.S) || m_newControllerState[0].ThumbSticks.Left.Y < 0 );
+                    return (m_newState.IsKeyDown(Keys.S) || m_newControllerState[0].ThumbSticks.Left.Y < 0);
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Down);
+                    return (m_newState.IsKeyDown(Keys.Down)|| m_newControllerState[1].ThumbSticks.Left.Y < 0);
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -111,7 +114,8 @@ namespace WindowsGame1
                 case InputMode.Player1:
                     return ((m_newState.IsKeyDown(Keys.S) && m_oldState.IsKeyUp(Keys.S)) || m_newControllerState[0].ThumbSticks.Left.Y < 0 && m_oldControllerState[0].ThumbSticks.Left.Y == 0);
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Down)&& m_oldState.IsKeyUp(Keys.Down);
+                    return m_newState.IsKeyDown(Keys.Down) && m_oldState.IsKeyUp(Keys.Down)||(m_newControllerState[1].ThumbSticks.Left.Y < 0 && m_oldControllerState[1].ThumbSticks.Left.Y == 0);
+               ;
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -124,7 +128,7 @@ namespace WindowsGame1
                 case InputMode.Player1:
                     return (m_newState.IsKeyDown(Keys.A) || m_newControllerState[0].ThumbSticks.Left.X < 0);
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Left);
+                    return (m_newState.IsKeyDown(Keys.Left) || m_newControllerState[1].ThumbSticks.Left.X < 0);
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -137,7 +141,7 @@ namespace WindowsGame1
                 case InputMode.Player1:
                     return (m_newState.IsKeyDown(Keys.D) || m_newControllerState[0].ThumbSticks.Left.X > 0);
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Right);
+                    return (m_newState.IsKeyDown(Keys.Right) || m_newControllerState[1].ThumbSticks.Left.X > 0);
 
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
@@ -150,11 +154,11 @@ namespace WindowsGame1
             switch (m_Mode)
             {
                 case InputMode.Player1:
-                    bool keyboardNewlyPressed = m_newState.IsKeyDown(Keys.R)&& m_oldState.IsKeyUp(Keys.R);
+                    bool keyboardNewlyPressed = m_newState.IsKeyDown(Keys.R) && m_oldState.IsKeyUp(Keys.R);
                     bool controllerNewlyPressed = false; //f m_newControllerState[0].IsButtonDown(Buttons.A) && m_oldControllerState[0].IsButtonUp(Buttons.A);
                     return keyboardNewlyPressed || controllerNewlyPressed;
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Add)&& m_oldState.IsKeyUp(Keys.Add);
+                    return m_newState.IsKeyDown(Keys.Add) && m_oldState.IsKeyUp(Keys.Add);
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -162,13 +166,14 @@ namespace WindowsGame1
 
         public bool createPrismNewlyPressed()
         {
-            switch(m_Mode){
+            switch (m_Mode)
+            {
                 case InputMode.Player1:
                     return m_newControllerState[0].IsButtonDown(Buttons.Y) && m_oldControllerState[0].IsButtonUp(Buttons.Y);
                 case InputMode.Player2:
                     return m_newState.IsKeyDown(Keys.Insert) && m_oldState.IsKeyDown(Keys.Insert);
                 default:
-                    
+
                     throw new NotImplementedException("Receeved unexpected input");
             }
         }
@@ -179,7 +184,7 @@ namespace WindowsGame1
             {
                 case InputMode.Player1:
                     bool keyboardNewlyReleased = m_newState.IsKeyUp(Keys.R) && m_oldState.IsKeyDown(Keys.R);
-                  //  bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.Y) && m_oldControllerState[0].IsButtonDown(Buttons.Y);
+                    //  bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.Y) && m_oldControllerState[0].IsButtonDown(Buttons.Y);
                     return keyboardNewlyReleased;// || controllerNewlyReleased;
                 case InputMode.Player2:
                     return m_newState.IsKeyUp(Keys.Add) && m_oldState.IsKeyDown(Keys.Add);
@@ -194,10 +199,11 @@ namespace WindowsGame1
             {
                 case InputMode.Player1:
                     bool keyboardNewlyReleased = m_newState.IsKeyUp(Keys.D1) && m_oldState.IsKeyDown(Keys.D1);
-                    bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.B) && m_oldControllerState[0].IsButtonDown(Buttons.B    );
+                    bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.B) && m_oldControllerState[0].IsButtonDown(Buttons.B);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7);
+                    return (m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7)) || (m_newControllerState[1].IsButtonUp(Buttons.B) && m_oldControllerState[1].IsButtonDown(Buttons.B));
+                 ;
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -214,7 +220,8 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.DPadLeft) && m_oldControllerState[0].IsButtonDown(Buttons.DPadLeft);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7);
+                    return (m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7)) || (m_newControllerState[1].IsButtonUp(Buttons.DPadLeft) && m_oldControllerState[1].IsButtonDown(Buttons.DPadLeft));
+                    ;
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -231,7 +238,8 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.DPadRight) && m_oldControllerState[0].IsButtonDown(Buttons.DPadRight);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7);
+                    return (m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7)) || (m_newControllerState[1].IsButtonUp(Buttons.DPadRight) && m_oldControllerState[1].IsButtonDown(Buttons.DPadRight));
+                    ;
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -248,7 +256,7 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.DPadUp) && m_oldControllerState[0].IsButtonDown(Buttons.DPadUp);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7);
+                    return m_newState.IsKeyUp(Keys.NumPad7) && m_oldState.IsKeyDown(Keys.NumPad7) || m_newControllerState[1].IsButtonUp(Buttons.DPadUp) && m_oldControllerState[1].IsButtonDown(Buttons.DPadUp)  ;
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -264,7 +272,7 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.RightShoulder) && m_oldControllerState[0].IsButtonDown(Buttons.RightShoulder);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad9) && m_oldState.IsKeyDown(Keys.NumPad9);
+                    return (m_newState.IsKeyUp(Keys.NumPad9) && m_oldState.IsKeyDown(Keys.NumPad9) || m_newControllerState[1].IsButtonUp(Buttons.RightShoulder) && m_oldControllerState[1].IsButtonDown(Buttons.RightShoulder));
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -281,7 +289,7 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.LeftShoulder) && m_oldControllerState[0].IsButtonDown(Buttons.LeftShoulder);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad3) && m_oldState.IsKeyDown(Keys.NumPad3);
+                    return m_newState.IsKeyUp(Keys.NumPad3) && m_oldState.IsKeyDown(Keys.NumPad3) || m_newControllerState[1].IsButtonUp(Buttons.LeftShoulder) && m_oldControllerState[1].IsButtonDown(Buttons.LeftShoulder);
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
             }
@@ -298,7 +306,7 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.X) && m_oldControllerState[0].IsButtonDown(Buttons.X);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Multiply) && m_oldState.IsKeyUp(Keys.Multiply);
+                    return m_newState.IsKeyDown(Keys.Multiply) && m_oldState.IsKeyUp(Keys.Multiply) || m_newControllerState[1].IsButtonUp(Buttons.X) && m_oldControllerState[1].IsButtonDown(Buttons.X);
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
 
@@ -314,7 +322,8 @@ namespace WindowsGame1
                     bool controllerNewlyReleased = m_newControllerState[0].IsButtonDown(Buttons.A) && m_oldControllerState[0].IsButtonUp(Buttons.A);
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Subtract) && m_oldState.IsKeyUp(Keys.Subtract);
+                    return m_newState.IsKeyDown(Keys.Subtract) && m_oldState.IsKeyUp(Keys.Subtract)||m_newControllerState[1].IsButtonDown(Buttons.A) && m_oldControllerState[1].IsButtonUp(Buttons.A);
+            ;
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -368,7 +377,7 @@ namespace WindowsGame1
                     System.Console.WriteLine("Controller right: " + m_newControllerState[0].Triggers.Right);
                     return m_newState.IsKeyDown(Keys.Space) || m_newControllerState[0].Triggers.Left > .8;
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.NumPad0);
+                    return m_newState.IsKeyDown(Keys.NumPad0) || m_newControllerState[1].Triggers.Left > .8;
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -397,7 +406,8 @@ namespace WindowsGame1
                     bool controllerNewlyPressed = m_newControllerState[0].Triggers.Left > .8 && m_oldControllerState[0].Triggers.Left < .8;
                     return keyboardNewlyPressed || controllerNewlyPressed;
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.NumPad0) && m_oldState.IsKeyUp(Keys.NumPad0);
+                    return (m_newState.IsKeyDown(Keys.NumPad0) && m_oldState.IsKeyUp(Keys.NumPad0)) || (m_newControllerState[1].Triggers.Left > .8 && m_oldControllerState[1].Triggers.Left < .8);
+                    ;
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -413,7 +423,7 @@ namespace WindowsGame1
                     bool controllerNewlyPressed = m_newControllerState[0].Triggers.Right > .8 && m_oldControllerState[0].Triggers.Right < .8;
                     return keyboardNewlyPressed || controllerNewlyPressed;
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.NumPad0) && m_oldState.IsKeyUp(Keys.NumPad0);
+                    return ((m_newState.IsKeyDown(Keys.NumPad0) && m_oldState.IsKeyUp(Keys.NumPad0)) || m_newControllerState[1].Triggers.Right > .8 && m_oldControllerState[1].Triggers.Right < .8);
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -424,10 +434,10 @@ namespace WindowsGame1
             {
                 case InputMode.Player1:
                     bool keyboardNewlyReleased = m_newState.IsKeyUp(Keys.Space) && m_oldState.IsKeyDown(Keys.Space);
-                    bool controllerNewlyReleased = m_newControllerState[0].Triggers.Right < .8 ;
+                    bool controllerNewlyReleased = m_newControllerState[0].Triggers.Right < .8;
                     return keyboardNewlyReleased || controllerNewlyReleased;
                 case InputMode.Player2:
-                    return m_newState.IsKeyUp(Keys.NumPad0) && m_oldState.IsKeyDown(Keys.NumPad0);
+                    return (m_newState.IsKeyUp(Keys.NumPad0) && m_oldState.IsKeyDown(Keys.NumPad0)) || m_newControllerState[1].Triggers.Right < .8;
                 default:
                     throw new NotImplementedException("Received unexpected input mode");
             }
@@ -454,11 +464,10 @@ namespace WindowsGame1
             switch (m_Mode)
             {
                 case InputMode.Player1:
-                    bool keyboardNewlyReleased = m_newState.IsKeyUp(Keys.Escape) && m_oldState.IsKeyDown(Keys.Escape);
-                    bool controllerNewlyReleased = m_newControllerState[0].IsButtonUp(Buttons.Start) && m_oldControllerState[0].IsButtonDown(Buttons.Start);
-                    return keyboardNewlyReleased || controllerNewlyReleased;
+                    return (m_newState.IsKeyUp(Keys.Escape) && m_oldState.IsKeyDown(Keys.Escape)) || (m_newControllerState[0].IsButtonUp(Buttons.Start) && m_oldControllerState[0].IsButtonDown(Buttons.Start));
                 case InputMode.Player2:
-                    return m_newState.IsKeyDown(Keys.Pause) && m_oldState.IsKeyUp(Keys.Pause);
+                    return (m_newState.IsKeyUp(Keys.Escape) && m_oldState.IsKeyDown(Keys.Escape)) || (m_newControllerState[1].IsButtonUp(Buttons.Start) && m_oldControllerState[1].IsButtonDown(Buttons.Start));
+                    ;
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
 
@@ -477,18 +486,20 @@ namespace WindowsGame1
             m_newControllerState[0] = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
             m_newControllerState[1] = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.Two);
 
-        
+
 
 
         }
 
-        public Vector2 LStickPosition(){
+        public Vector2 LStickPosition()
+        {
 
-            switch (m_Mode){
+            switch (m_Mode)
+            {
                 case InputMode.Player1:
-                    return new Vector2(m_newControllerState[0].ThumbSticks.Left.X,-m_newControllerState[0].ThumbSticks.Left.Y);
+                    return new Vector2(m_newControllerState[0].ThumbSticks.Left.X, -m_newControllerState[0].ThumbSticks.Left.Y);
                 case InputMode.Player2:
-                    return m_newControllerState[1].ThumbSticks.Left;
+                    return new Vector2(m_newControllerState[1].ThumbSticks.Left.X, -m_newControllerState[1].ThumbSticks.Left.Y);
                 default:
                     throw new NotImplementedException("Receeved unexpected input");
 
@@ -496,8 +507,8 @@ namespace WindowsGame1
             }
         }
 
-        }
-
-
     }
+
+
+}
 

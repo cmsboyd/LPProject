@@ -34,6 +34,7 @@ namespace WindowsGame1
             score_bar = contentMangager.Load<Texture2D>("surface_corner");
 
             start = new SplashImage(m_content, "FightSplash", 1000f);
+            victory = new SplashImage(m_content, "VictorySplash", 500f);
             manager = Manager;
             wallSetting = WallType.UpDownReflect;
            
@@ -44,7 +45,7 @@ namespace WindowsGame1
 
         protected override void typeUpdate(GameTime time)
         {
-            foreach (Laser_Turret t in turrets) if (t.getHealth() <= 0) manager.addMenu(manager.VictoryMenu);
+            foreach (Laser_Turret t in turrets) if (t.getHealth() <= 0) { manager.closeLevel(); }
             
         }
 

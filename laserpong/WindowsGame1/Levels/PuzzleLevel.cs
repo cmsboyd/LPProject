@@ -34,16 +34,20 @@ namespace WindowsGame1
             font = contentMangager.Load<SpriteFont>("Text");
             score_bar = contentMangager.Load<Texture2D>("surface_corner");
             manager = Manager;
-            baseConstruction();
-            start = new SplashImage(m_content, "FightSplash", 1000f);
 
+            start = new SplashImage(m_content, "FightSplash", 1000f);
             victory = new SplashImage(m_content, "VictorySplash", 500f);
+
+            baseConstruction();
         }
 
         public override void baseConstruction()
         {
             base.baseConstruction();
 
+
+            start.Start();
+            
             reflect_limit = 2;
             refract_limit = 2;
             absorb_limit = 1000;
@@ -55,6 +59,7 @@ namespace WindowsGame1
 
         protected override void typeUpdate(GameTime t)
         {
+            if (success && (victory.Display == false)) {manager.closeLevel(); }
             success = true;
             foreach (Prism p in prisms)
             {
@@ -62,18 +67,14 @@ namespace WindowsGame1
 
             }
 
+            if (success && (victory.Display == false)) { victory.Start(); }
+
+
+
 
         }
 
 
-        public override void RemoveSurface(Surface remove)
-        {
-            remove.tower_A.adj_surfaces.Remove(remove);
-            remove.tower_B.adj_surfaces.Remove(remove);
-            surfaces.Remove(remove);
-            
-
-        }
 
        
 
