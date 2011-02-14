@@ -250,7 +250,8 @@ namespace WindowsGame1
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(image, position, new Rectangle(0, 0, 80, 80), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            Rectangle screenDestination = new Rectangle((int)position.X - 6, (int)position.Y - 6, 12, 12);
+            batch.Draw(image, screenDestination, null, color, 0f, Vector2.Zero, SpriteEffects.None, 1f);
         }
 
         public void selectTower(Tower select)

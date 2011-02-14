@@ -166,24 +166,23 @@ namespace WindowsGame1
 
         public void handleCollision(Laser l, Level parent)
         {
+            /* Is this a laser we're generating? Don't bother! */
+            if (m_collisions.ContainsValue(l)) { return; }
+
             Laser generating;
-            bool flipped = false;
 
             Vector2 u = l.End - l.Start;
             Vector2 v = this.End - this.Start;
             Vector2 w = l.Start - this.Start;
 
-            // Do we need to flip?
+             // Do we need to flip?
             Vector2 vPerp = new Vector2(-v.Y, v.X);
             vPerp.Normalize();
 
             if ((Vector2.Dot(l.Start - this.Start, vPerp)) > 0) {
                 // Need to flip!!
                 v = this.Start - this.End;
-                flipped = true;
             }
-
-            vPerp = new Vector2(v.Y, -v.X);
 
             float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
 
@@ -192,28 +191,49 @@ namespace WindowsGame1
             // Have we already started a laser for this collision?
             if (!m_collisions.ContainsKey(l))
             {
-                // Compute reflection
-                u.Normalize();
-                v.Normalize();
-                float theta = (float)Math.Acos(Vector2.Dot(u, v));
-                if (theta > (float)Math.PI * .5f)
-                {
-                   theta -= (float)Math.PI;
-                }
-               
-                float ninety = (float)Math.PI / 2f;
-                if (flipped) ninety = -ninety;
+                Vector2 normal;
+                normal.X = -Direction.Y;
+                normal.Y = Direction.X;
+
+                normal.Normalize();
 
                 if (m_type == SurfaceType.Refractive)
                 {
-                    float perpO = LineElement.computeOrientation(vPerp);
-                    float phi = perpO - l.Orientation;
+                    if (Vector2.Dot(normal, l.Direction) < 0) {
+                        normal = -normal;
+                    }
 
-                    generating = new Laser(pIntersect, l.Orientation + phi / 2f, l.Color);
+                    /* Need 3d vectors for rotations and cross products! */
+                    Vector3 direction3d = new Vector3(l.Direction, 0f);
+                    direction3d.Normalize();
+
+                    Vector3 normal3d = new Vector3(normal, 0f);
+                    /* Already normalized! */
+
+                    Vector3 cross = Vector3.Cross(direction3d, normal3d);
+                    bool incidentToNormalClockwiseRotation = (cross.Z > 0);
+
+                    /* If direction -> normal is a CLOCKWISE rotation, then
+                     * normal -> refractedDirection is a COUNTER-CLOCKWISE rotation. You will find this
+                     * by the negating of theta2 below. */
+                    
+
+                    float incidentTheta = (float)Math.Acos(Vector3.Dot(direction3d, normal3d));
+                    float refractedTheta = incidentTheta / 2;
+
+                    if (incidentToNormalClockwiseRotation) {
+                        refractedTheta = -refractedTheta; /* See above! */
+                    }
+
+                    Vector3 refractedDirection3d = Vector3.Transform(normal3d, Matrix.CreateRotationZ(refractedTheta));
+                    Vector2 refractedDirection = new Vector2(refractedDirection3d.X, refractedDirection3d.Y);
+
+                    generating = new Laser(pIntersect, refractedDirection, l.Color);
                 }
                 else
                 {
-                    generating = new Laser(pIntersect, l.Orientation - 2f*theta, l.Color);
+                    Vector2 newDirection = Vector2.Reflect(l.Direction, normal);
+                    generating = new Laser(pIntersect, newDirection, l.Color);
                 }
 
                 if (m_type == SurfaceType.Reflective || m_type == SurfaceType.Refractive)
@@ -225,13 +245,12 @@ namespace WindowsGame1
                 generating = m_collisions[l];
             }
             
-            // Compute length to chomp / add
-            l.Chomp(u.Length() * tIntersect);
-
             if (m_type == SurfaceType.Reflective || m_type == SurfaceType.Refractive)
             {
                 generating.AdjustLength(u.Length() * tIntersect);
             }
+
+            l.Chomp(u.Length() * tIntersect);
 
             m_handledCollision.Add(l);
         }

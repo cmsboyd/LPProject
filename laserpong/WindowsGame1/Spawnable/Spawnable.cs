@@ -109,14 +109,19 @@ namespace WindowsGame1
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(image, position, new Rectangle(0, 0, 80, 80), s_color, s_orientation, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            Rectangle screenDestination = new Rectangle((int)position.X - 6, (int)position.Y - 6, 12, 12);
+            batch.Draw(image, screenDestination, null, s_color, s_orientation, Vector2.Zero, SpriteEffects.None, 1f);
         }
 
         public bool isColliding(Laser laser)
         {
             BoundingBox bounds = getBounds();
-            Ray temp_las_up = new Ray(new Vector3(laser.End.X, laser.End.Y, 0), new Vector3(laser.Direction.X, laser.Direction.Y, 0));
-            float? intersection = bounds.Intersects(temp_las_up);
+
+            Vector2 normalizedLaserDirection = laser.Direction;
+            normalizedLaserDirection.Normalize();
+            Ray laser_ray = new Ray(new Vector3(laser.End, 0), new Vector3(normalizedLaserDirection, 0));
+
+            float? intersection = bounds.Intersects(laser_ray);
             return (intersection > 0 && intersection < laser.Length);
         } 
 

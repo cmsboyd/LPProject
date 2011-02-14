@@ -402,8 +402,11 @@ namespace WindowsGame1
 
         public void isColliding(Laser laser)
         {
-            Ray temp_las_up = new Ray(new Vector3(laser.End.X, laser.End.Y, 0), new Vector3(laser.Direction.X, laser.Direction.Y, 0));
-            float? intersection = bounds.Intersects(temp_las_up);
+            Vector2 normalizedLaserDirection = laser.Direction;
+            normalizedLaserDirection.Normalize();
+            Ray laser_ray = new Ray(new Vector3(laser.End, 0), new Vector3(normalizedLaserDirection, 0));
+
+            float? intersection = bounds.Intersects(laser_ray);
             if(intersection > 0 && intersection < laser.Length){
                 if (laser.Color == Color.White) health+=2;
                     else health-=5;

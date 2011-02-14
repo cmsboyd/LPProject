@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LaserParticle.cs" />
     <Compile Include="Structures\ColorPrism.cs" />
     <Compile Include="FlashText.cs" />
     <Compile Include="Player.cs" />

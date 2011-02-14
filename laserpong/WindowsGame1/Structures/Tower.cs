@@ -136,11 +136,13 @@ namespace WindowsGame1
 
         public void isColliding(Laser laser)
         {
-            Ray temp_las_up = new Ray(new Vector3(laser.End.X, laser.End.Y, 0), new Vector3(laser.Direction.X, laser.Direction.Y, 0));
-            //Ray temp_las_down = new Ray(new Vector3(laser.Start.X, laser.Start.Y, 0), new Vector3(laser.Direction.X, laser.Direction.Y, 0));
-            //float intersect = (float)bounds.Intersects(temp_las_up);
-            //if (intersect > 0) laser.Chomp(intersect);
-            float? intersection = bounds.Intersects(temp_las_up);
+            Vector2 normalizedLaserDirection = laser.Direction;
+            normalizedLaserDirection.Normalize();
+
+            /* Best. Name. Evar! */
+            Ray laser_ray = new Ray(new Vector3(laser.End, 0), new Vector3(normalizedLaserDirection, 0));
+
+            float? intersection = bounds.Intersects(laser_ray);
             if (intersection > 0 && intersection < laser.Length)
             {
                 laser.Chomp(laser.Length - (float)intersection);
@@ -148,7 +150,6 @@ namespace WindowsGame1
                 else health--;
                 if (health > max_health) health = max_health;
             }
-            // return (bounds.Intersects(temp_las_up) >0 || bounds.Intersects(temp_las_down) > 0);
         }
 
 
