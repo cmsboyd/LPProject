@@ -36,7 +36,7 @@ namespace WindowsGame1
         public override void execute()
         {
             parent.setLevel(target);
-            parent.clearMenus();
+          //  parent.clearMenus();
 
         }
 

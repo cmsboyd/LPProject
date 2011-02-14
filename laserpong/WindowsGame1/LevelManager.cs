@@ -25,7 +25,7 @@ namespace WindowsGame1
         ContentManager CM;
         InputController input;
         Menu LevelMenu;
-        Menu PuzzleMenu;
+        public Menu PuzzleMenu;
         public SpriteFont font;
         Level blankLevel;
         Menu pauseMenu;
@@ -81,6 +81,11 @@ namespace WindowsGame1
 
         }
 
+        public void closeLevel()
+        {
+            currentLevel = null;
+        }
+
         public void pauseGame()
         {
             addMenu(pauseMenu);
@@ -88,15 +93,10 @@ namespace WindowsGame1
 
 
         public void Update(GameTime t)
-        {   
-           // if (logo.Display) logo.Update(t);
-           // else
-            {   
-                if (currentLevel == null) currentMenu.Update(t);
-                else 
-                     currentLevel.Update(t);
-                
-            }
+        {
+            if (currentMenu != null && currentMenu == pauseMenu) currentMenu.Update(t);
+            else if (currentLevel == null) currentMenu.Update(t);
+                else currentLevel.Update(t);
         }
 
         public void addPlayer (InputController.InputMode playerNUM)
@@ -114,7 +114,7 @@ namespace WindowsGame1
             //if (logo.Display) logo.Draw(batch);
             //else
             {
-                if(currentLevel ==null) currentMenu.Draw(batch);
+                if(currentLevel == null) currentMenu.Draw(batch);
                 else currentLevel.Draw(batch);
 
             }

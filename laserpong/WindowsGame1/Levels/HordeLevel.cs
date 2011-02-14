@@ -36,6 +36,7 @@ namespace WindowsGame1
             score = 0;
             manager = Manager;
             start = new SplashImage(m_content, "FightSplash", 1000f);
+            victory = new SplashImage(m_content, "VictorySplash", 250f);
             wallSetting = WallType.UpDownReflect;
             
         }
@@ -80,7 +81,7 @@ namespace WindowsGame1
                 }
 
 
-            foreach (Laser_Turret T in turrets) if (T.getHealth() <= 0) manager.addMenu(manager.VictoryMenu);
+            foreach (Laser_Turret T in turrets) if (T.getHealth() <= 0) manager.closeLevel();
             
         }
 

@@ -44,6 +44,7 @@ namespace WindowsGame1
         public SpriteFont font;
         protected SplashImage start;
         protected SplashImage victory;
+        protected bool endingSequence;
         
 
 
@@ -286,6 +287,7 @@ namespace WindowsGame1
         public void Update(GameTime t)
         {
             if (start.Display) start.Update(t);
+            else if (victory.Display) victory.Update(t);
             else
             {
 
@@ -486,6 +488,7 @@ namespace WindowsGame1
             typeDraw(batch);
 
             if (start.Display) start.Draw(batch);
+            if (victory.Display) victory.Draw(batch);
         }
 
 

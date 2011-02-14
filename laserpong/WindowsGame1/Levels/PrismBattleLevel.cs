@@ -65,8 +65,8 @@ namespace WindowsGame1
 
         public override void typeDraw(SpriteBatch batch)
         {
-            batch.Draw(score_bar, new Rectangle(12, 5, 1000, 5), Color.Blue);
-            batch.Draw(score_bar, new Rectangle(12, 5, score, 5), Color.Red);
+            batch.Draw(score_bar, new Rectangle(12, 5, 1000, 5), players["Player2"].Color);
+            batch.Draw(score_bar, new Rectangle(12, 5, score, 5), players["Player1"].Color);
         }
 
     }
