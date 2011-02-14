@@ -1,0 +1,14 @@
+laserpong/WindowsGame1.suo
+laserpong/WindowsGame1/bin/
+laserpong/WindowsGame1/obj/
+laserpong/WindowsGame1/Content/bin/
+laserpong/WindowsGame1/Content/obj/
+laserpong/WindowsGame1/*.cachefile
+laserpong/WindowsGame1/*.user
+laserpong/WindowsGame1/.svn/
+laserpong/WindowsGame1/Content/.svn/
+laserpong/WindowsGame1/Properties/.svn/
+laserpong/.svn/
+
+
+Installer/
