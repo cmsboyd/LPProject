@@ -81,6 +81,38 @@ namespace WindowsGame1
             tail.Update(t);
         }
 
+        public bool IsColliding(LineSegment segment)
+        {
+            Vector2 u = End - Start;
+            Vector2 v = segment.End - segment.Start;
+            Vector2 w = Start - segment.Start;
+
+            float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
+            if (tIntersect > 0f && tIntersect < 1f) {
+                float sIntersect = (u.X * w.Y - u.Y * w.X) / (u.X * v.Y - u.Y * v.X);
+                if (sIntersect > 0f && sIntersect < 1f) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsColliding(BoundingBox boundingBox)
+        {
+            Vector2 normalizedLaserDirection = Direction;
+            normalizedLaserDirection.Normalize();
+            Ray laser_ray = new Ray(new Vector3(End, 0), new Vector3(normalizedLaserDirection, 0));
+
+            float? intersection = boundingBox.Intersects(laser_ray);
+            if (intersection != null && intersection > 0 && intersection < Length) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /* SOON TO BE DEPRECATED LASER API */
+
         public void IncreaseLength(TimeSpan timeDelta)
         {
             Vector2 tailVelocity = tail.Velocity;

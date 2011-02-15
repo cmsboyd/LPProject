@@ -43,6 +43,8 @@ namespace WindowsGame1
         private Level parent;
 
         private LineSegment surfaceLineSegment;
+
+        public LineSegment LineSegment { get { return surfaceLineSegment; } }
         
 
         public Surface(SurfaceType type, Vector2 start, Vector2 end)
@@ -134,42 +136,7 @@ namespace WindowsGame1
             tower_B = new_tower;
         }
 
-        public bool isColliding(Laser l)
-        {
-            if (!built) return false;
-            // First do a very fast box-collision detection
-            /*Vector2 lTopLeft = new Vector2(Math.Min(l.Head.X, l.Tail.X), Math.Min(l.Head.Y, l.Tail.Y));
-            Vector2 lBottomRight = new Vector2(Math.Max(l.Head.X, l.Tail.X), Math.Max(l.Head.Y, l.Tail.Y));
-
-            Vector2 sTopLeft = new Vector2(Math.Min(Start.X, End.X), Math.Min(Start.Y, End.Y));
-            Vector2 sBottomRight = new Vector2(Math.Max(Start.X, End.X), Math.Max(Start.Y, End.Y));
-
-            if (!(lTopLeft.X < sBottomRight.X && lBottomRight.X < sTopLeft.X
-                && lTopLeft.Y < sBottomRight.Y && lBottomRight.Y < sTopLeft.Y))
-            {
-                return false;
-            }*/
-            
-            // More expensive line intersection.
-            // time of intersection
-
-            Vector2 u = l.End - l.Start;
-            Vector2 v = surfaceLineSegment.End - surfaceLineSegment.Start;
-            Vector2 w = l.Start - surfaceLineSegment.Start;
-
-            float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
-            if (tIntersect > 0f && tIntersect < 1f)
-            {
-                float sIntersect = (u.X * w.Y - u.Y * w.X) / (u.X * v.Y - u.Y * v.X);
-                if (sIntersect > 0f && sIntersect < 1f)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void handleCollision(Laser l, Level parent)
+        public void HandleCollision(Laser l, Level parent)
         {
             /* Is this a laser we're generating? Don't bother! */
             if (m_collisions.ContainsValue(l)) { return; }

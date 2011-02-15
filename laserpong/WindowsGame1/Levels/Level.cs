@@ -326,19 +326,20 @@ namespace WindowsGame1
 
     public void HandleCollisions(GameTime t)
     {
+        /* Surfaces */
         foreach (Surface s in surfaces)
         {
             collisions.Clear();
             foreach (Laser l in lasers)
             {
-                if (s.isColliding(l))
+                if (s.built && l.IsColliding(s.LineSegment))
                 {
                     collisions.Add(l);
                 }
             }
             foreach (Laser l in collisions)
             {
-                s.handleCollision(l, this);
+                s.HandleCollision(l, this);
             }
 
             s.deleteLasers(this);
@@ -399,7 +400,9 @@ namespace WindowsGame1
             p.resetColor();
             foreach (Laser l in lasers)
             {
-                p.isColliding(l);
+                if (l.IsColliding(p.BoundingBox)) {
+                    p.HandleCollision(l);
+                }
             }
         }
     }

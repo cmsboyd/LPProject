@@ -29,6 +29,8 @@ namespace WindowsGame1
         protected BoundingBox bounds;
         protected Color temp_color;
 
+        public BoundingBox BoundingBox { get { return bounds; } }
+
 
         public Prism()
         { 
@@ -85,23 +87,10 @@ namespace WindowsGame1
 
         }
 
-
-        public void isColliding(Laser laser)
+        public void HandleCollision(Laser laser)
         {
-
-            Vector2 normalizedLaserDirection = laser.Direction;
-            normalizedLaserDirection.Normalize();
-            Ray laser_ray = new Ray(new Vector3(laser.End, 0), new Vector3(normalizedLaserDirection, 0));
-
-            float? intersection = bounds.Intersects(laser_ray);
-            if (intersection > 0 && intersection < laser.Length)
-            {
-                //color = Color.White;
-              //  laser.Chomp(laser.Length - (float)intersection);
-                typeEffect(laser);
-
-            }
-            }
+            typeEffect(laser);
+        }
 
 
     }
