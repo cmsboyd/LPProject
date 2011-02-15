@@ -36,7 +36,7 @@ namespace WindowsGame1
             start = new SplashImage(m_content, "FightSplash", 1000f);
             victory = new SplashImage(m_content, "VictorySplash", 500f);
             manager = Manager;
-            wallSetting = WallType.FullReflect;
+            wallSetting = WallType.UpDownReflect;
            
         }
 

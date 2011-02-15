@@ -84,7 +84,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="FullLevelMenu.cs" />
+=======
+    <Compile Include="LaserParticle.cs" />
+>>>>>>> 2a4ebc1cefa2cf478beec2aff8129d95d1893d02
     <Compile Include="Structures\ColorPrism.cs" />
     <Compile Include="FlashText.cs" />
     <Compile Include="Player.cs" />

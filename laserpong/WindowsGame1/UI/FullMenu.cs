@@ -105,7 +105,7 @@ namespace WindowsGame1
             if (!players.ContainsKey("Player2")) player2Start.Draw(batch);
 
            
-            foreach( Player p in players.Values) batch.Draw(cursor_image, new Rectangle(x_position + x_spacing * current_index - 20, y_position + y_spacing*current_index, 20, 20), p.Color);
+            foreach( Player p in players.Values) batch.Draw(cursor_image, new Rectangle(x_position + x_spacing * current_index - 10, y_position + y_spacing*current_index + 7, 10, 10), p.Color);
             base.Draw(batch);
             //batch.Draw(image, new Rectangle(0, 0, 1024, 768), Color.White);
 
