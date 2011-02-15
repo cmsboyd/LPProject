@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace WindowsGame1
 {
-    class Surface : LineElement
+    class Surface
     {
         public enum SurfaceType
         {
@@ -23,6 +23,9 @@ namespace WindowsGame1
             Reflective,
             Refractive
         };
+
+        private const int SEGMENT_SPACING = 8;
+        private static readonly Vector2 SEGMENT_SIZE = new Vector2(5, 5);
 
         private SurfaceType m_type;
         public SurfaceType M_type{get{return m_type;}}
@@ -38,40 +41,41 @@ namespace WindowsGame1
         public Tower tower_A;
         public Tower tower_B;
         private Level parent;
+
+        private LineSegment surfaceLineSegment;
         
 
         public Surface(SurfaceType type, Vector2 start, Vector2 end)
         {
+            surfaceLineSegment = new LineSegment(start, end);
             m_type = type;
-            LStart = start;
-            LEnd = end;
-            m_segments = (int)Length / 8;
-            //m_orientation = LineElement.computeOrientation(m_direction);
 
-            m_collisions = new Dictionary<Laser, Laser>();
-
-
-            if (m_type == SurfaceType.Reflective) m_color = Color.Silver;
-            else if (m_type == SurfaceType.Refractive) m_color = Color.Pink;
-            else m_color = Color.Black;
+            construct();
         }
 
 
         public Surface(Tower a, Tower b, SurfaceType type, Level Parent)
         {
-            tower_A = a;
-            tower_A.AddSurface(this);
-            tower_B = b;
-            tower_B.AddSurface(this);
+            tower_A = a; tower_A.AddSurface(this);
+            tower_B = b; tower_B.AddSurface(this);
             m_type = type;
-            LStart = a.getPosition();
-            LEnd = b.getPosition();
-            orientation = (float)Math.Atan(LStart.X - LEnd.X / LStart.Y / LEnd.Y);
-            m_segments = (int)Length / 8;
+
+            surfaceLineSegment = new LineSegment(a.getPosition(), b.getPosition());
+
             parent = Parent;
 
+            construct();
+        }
+
+        private void construct()
+        {
+            orientation = surfaceLineSegment.RotationAboveXAxis();
+            m_segments = (int)surfaceLineSegment.Length() / SEGMENT_SPACING;
+
+            m_collisions = new Dictionary<Laser, Laser>();
+
             if (m_type == SurfaceType.Reflective) m_color = Color.Silver;
-            else if (m_type == SurfaceType.Refractive) m_color = Color.White;
+            else if (m_type == SurfaceType.Refractive) m_color = Color.Pink;
             else m_color = Color.Black;
         }
 
@@ -95,16 +99,16 @@ namespace WindowsGame1
                 tower_A.RemoveSurface(this);
             }
 
-            LStart = tower_A.getPosition();
-            LEnd = tower_B.getPosition();
-            orientation = (float)Math.Atan((LEnd.Y - LStart.Y) / (LEnd.X - LStart.X));
-            m_segments = (int)Length / 8;
+            surfaceLineSegment.Start = tower_A.getPosition();
+            surfaceLineSegment.End = tower_B.getPosition();
+
+            orientation = surfaceLineSegment.RotationAboveXAxis();
+            m_segments = (int)surfaceLineSegment.Length() / SEGMENT_SPACING;
         }
 
         public void ChangeType(Surface.SurfaceType type)
         {
             m_type = type;
-
                 
             if (m_type == SurfaceType.Reflective) m_color = Color.Silver;
             else if (m_type == SurfaceType.Refractive) m_color = Color.White;
@@ -113,14 +117,15 @@ namespace WindowsGame1
 
         public void Draw(SpriteBatch batch)
         {
-            Color temp = m_color;
-            if (!built) temp = new Color(m_color, .5f);
+            Color alphaBlendedColor = m_color;
+            if (!built) alphaBlendedColor = new Color(m_color, .5f);
              
             for (int i = 0; i < m_segments; i++)
             {
-               // batch.Draw(m_surface_side, LStart + 8 * i * Direction, temp);
-                batch.Draw(m_surface_side, LStart + 8 * i * Direction + new Vector2(5,5), new Rectangle(0, 0, 10, 10), temp, orientation, new Vector2(5, 5),1f, SpriteEffects.None, .5f);
-             
+                Vector2 position = surfaceLineSegment.Start + (SEGMENT_SPACING * i * surfaceLineSegment.NormalizedDirection());
+
+                batch.Draw(m_surface_side, position + SEGMENT_SIZE, null, alphaBlendedColor, orientation, SEGMENT_SIZE, 
+                    1f, SpriteEffects.None, .5f);
             }
         }
 
@@ -149,8 +154,8 @@ namespace WindowsGame1
             // time of intersection
 
             Vector2 u = l.End - l.Start;
-            Vector2 v = this.End - this.Start;
-            Vector2 w = l.Start - this.Start;
+            Vector2 v = surfaceLineSegment.End - surfaceLineSegment.Start;
+            Vector2 w = l.Start - surfaceLineSegment.Start;
 
             float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
             if (tIntersect > 0f && tIntersect < 1f)
@@ -172,16 +177,16 @@ namespace WindowsGame1
             Laser generating;
 
             Vector2 u = l.End - l.Start;
-            Vector2 v = this.End - this.Start;
-            Vector2 w = l.Start - this.Start;
+            Vector2 v = surfaceLineSegment.End - surfaceLineSegment.Start;
+            Vector2 w = l.Start - surfaceLineSegment.Start;
 
              // Do we need to flip?
             Vector2 vPerp = new Vector2(-v.Y, v.X);
             vPerp.Normalize();
 
-            if ((Vector2.Dot(l.Start - this.Start, vPerp)) > 0) {
+            if ((Vector2.Dot(l.Start - surfaceLineSegment.Start, vPerp)) > 0) {
                 // Need to flip!!
-                v = this.Start - this.End;
+                v = surfaceLineSegment.Start - surfaceLineSegment.End;
             }
 
             float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
@@ -191,11 +196,10 @@ namespace WindowsGame1
             // Have we already started a laser for this collision?
             if (!m_collisions.ContainsKey(l))
             {
+                Vector2 direction = surfaceLineSegment.NormalizedDirection();
                 Vector2 normal;
-                normal.X = -Direction.Y;
-                normal.Y = Direction.X;
-
-                normal.Normalize();
+                normal.X = -direction.Y;
+                normal.Y = direction.X;
 
                 if (m_type == SurfaceType.Refractive)
                 {
