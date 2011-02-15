@@ -240,11 +240,13 @@ namespace WindowsGame1
         public void AddLaser(Laser add)
         {
             lasers.Add(add);
+            add.LaserEliminated += new Laser.LaserHandler(RemoveLaser);
             add.loadImage(m_content);
         }
 
         public void RemoveLaser(Laser remove)
         {
+            remove.LaserEliminated -= new Laser.LaserHandler(RemoveLaser);
             lasers.Remove(remove);
         }
 
@@ -330,7 +332,7 @@ namespace WindowsGame1
         foreach (Surface s in surfaces)
         {
             collisions.Clear();
-            foreach (Laser l in lasers)
+            foreach (Laser l in lasers.ToArray())
             {
                 if (s.built && l.IsColliding(s.LineSegment))
                 {
@@ -348,7 +350,7 @@ namespace WindowsGame1
 
         foreach (Spawnable s in spawns)
         {
-            foreach (Laser l in lasers)
+            foreach (Laser l in lasers.ToArray())
             {
                 if (s.isColliding(l))
                 {
@@ -370,7 +372,7 @@ namespace WindowsGame1
         foreach (Tower s in towers.Values)
         {
             
-            foreach (Laser l in lasers)
+            foreach (Laser l in lasers.ToArray())
             {
                 s.isColliding(l);
             }
@@ -389,16 +391,18 @@ namespace WindowsGame1
         destroyed.Clear();
         foreach (Laser_Turret lt in turrets)
         {
-            foreach (Laser l in lasers)
+            foreach (Laser l in lasers.ToArray())
             {
-                lt.isColliding(l);
+                if (l.IsColliding(lt.bounds)) {
+                    lt.HandleCollision(l);
+                }
             }
         }
 
         foreach (Prism p in prisms)
         {
             p.resetColor();
-            foreach (Laser l in lasers)
+            foreach (Laser l in lasers.ToArray())
             {
                 if (l.IsColliding(p.BoundingBox)) {
                     p.HandleCollision(l);

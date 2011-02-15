@@ -17,6 +17,7 @@ namespace WindowsGame1
 {
     class Laser_Turret
     {
+        public Vector2 laserStart;
         public Vector2 position;
         public float orientation;
         public string id;
@@ -95,6 +96,7 @@ namespace WindowsGame1
                     health_bar_pos = 0;
                     energy_bar_pos = 8;
                     position = new Vector2(30, m_parent.height / 2);
+                    laserStart = new Vector2(51, m_parent.height / 2);
                     orientation = 0f;
                     id = "Player 1";
                     color = Color.Red;
@@ -106,6 +108,7 @@ namespace WindowsGame1
                     health_bar_pos = m_parent.width - 5;
                     energy_bar_pos = m_parent.width - 13;
                     position = new Vector2(m_parent.width - 33, m_parent.height / 2);
+                    laserStart = new Vector2(m_parent.width - 54, m_parent.height / 2);
                     orientation = (float)Math.PI;
                     id = "Player 2";
                     color = Color.Blue;
@@ -146,6 +149,7 @@ namespace WindowsGame1
                     health_bar_pos = 0;
                     energy_bar_pos = 8;
                     position = new Vector2(30, m_parent.height / 2);
+                    laserStart = new Vector2(51, m_parent.height / 2);
                     orientation = 0f;
                     id = "Player 1";
                     cursor = new Cursor(this, input, m_parent);
@@ -156,6 +160,7 @@ namespace WindowsGame1
                     health_bar_pos = m_parent.width - 5;
                     energy_bar_pos = m_parent.width - 13;
                     position = new Vector2(m_parent.width - 33, m_parent.height / 2);
+                    laserStart = new Vector2(m_parent.width - 54, m_parent.height / 2);
                     orientation = (float)Math.PI;
                     id = "Player 2";
 
@@ -400,18 +405,14 @@ namespace WindowsGame1
         }
 
 
-        public void isColliding(Laser laser)
+        public void HandleCollision(Laser laser)
         {
-            Vector2 normalizedLaserDirection = laser.Direction;
-            normalizedLaserDirection.Normalize();
-            Ray laser_ray = new Ray(new Vector3(laser.End, 0), new Vector3(normalizedLaserDirection, 0));
+            /* Don't eat our own laser! */
+            if (m_generating == laser) { return; }
 
-            float? intersection = bounds.Intersects(laser_ray);
-            if(intersection > 0 && intersection < laser.Length){
-                if (laser.Color == Color.White) health+=2;
-                    else health-=5;
-                laser.Chomp(laser.Length - (float)intersection);
-            }
+            if (laser.Color == Color.White) health+=2;
+            else health-=5;
+            laser.Chomp(bounds);
         }
 
         public void loseHealth()

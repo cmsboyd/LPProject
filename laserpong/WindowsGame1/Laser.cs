@@ -17,6 +17,9 @@ namespace WindowsGame1
 {
     class Laser
     {
+        public delegate void LaserHandler(Laser l);
+        public event LaserHandler LaserEliminated;
+
         private LaserParticle head;
         private LaserParticle tail;
         private Texture2D laser;
@@ -29,6 +32,13 @@ namespace WindowsGame1
         public Vector2 Start { get { return head.Position; } }
 
         public Color Color { get { return color; } }
+
+        private void signalLaserEliminated()
+        {
+            if (LaserEliminated != null) {
+                LaserEliminated(this);
+            }
+        }
 
         public Laser(Vector2 position, float orientation, Color color)
         {
@@ -48,7 +58,7 @@ namespace WindowsGame1
         {
             Vector2 velocity = Vector2.Transform(Vector2.UnitX, Matrix.CreateRotationZ(turret.orientation));
 
-            construct(turret.position, velocity, turret.color);
+            construct(turret.laserStart, velocity, turret.color);
         }
 
 
@@ -56,7 +66,7 @@ namespace WindowsGame1
         {
             Vector2 velocity = Vector2.Transform(Vector2.UnitX, Matrix.CreateRotationZ(turret.orientation));
 
-            construct(turret.position, velocity, Color.White);
+            construct(turret.laserStart, velocity, Color.White);
         }
 
         private void construct(Vector2 position, Vector2 velocity, Color color)
@@ -99,16 +109,47 @@ namespace WindowsGame1
 
         public bool IsColliding(BoundingBox boundingBox)
         {
+            /* If the bounding box '''contains''' either of our end-points, we're definitely colliding */
+            if ( boundingBox.Contains(new Vector3(Start, 0f)) == ContainmentType.Contains ||
+                 boundingBox.Contains(new Vector3(End, 0f)) == ContainmentType.Contains ) {
+                return true;
+            }
+
+            float intersection = findIntersection(boundingBox);
+            if (intersection > 0 && intersection < Length) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public float Chomp(BoundingBox boundingBox)
+        {
+            if (!IsColliding(boundingBox)) {
+                return 0f;
+            }
+
+            float amountToChomp = findIntersection(boundingBox);
+
+            /* Value is now actually the amountToChomp! */
+            amountToChomp = Length - amountToChomp;
+
+            Chomp(amountToChomp);
+            return amountToChomp;
+        }
+
+        private float findIntersection(BoundingBox boundingBox)
+        {
             Vector2 normalizedLaserDirection = Direction;
             normalizedLaserDirection.Normalize();
             Ray laser_ray = new Ray(new Vector3(End, 0), new Vector3(normalizedLaserDirection, 0));
 
             float? intersection = boundingBox.Intersects(laser_ray);
-            if (intersection != null && intersection > 0 && intersection < Length) {
-                return true;
+            if (intersection == null) {
+                intersection = -1f;
             }
 
-            return false;
+            return (float)intersection;
         }
 
         /* SOON TO BE DEPRECATED LASER API */
@@ -130,6 +171,16 @@ namespace WindowsGame1
 
         public void Chomp(float amount)
         {
+            if (amount >= Length) {
+                /* Kill the laser! */
+                head.Position = tail.Position;
+                head.Velocity = Vector2.Zero;
+                tail.Velocity = Vector2.Zero;
+                signalLaserEliminated();
+            }
+            if (amount <= 0) {
+                System.Diagnostics.Debug.WriteLine("WTF??");
+            }
             Vector2 headVelocity = head.Velocity;
             headVelocity.Normalize();
 
