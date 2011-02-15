@@ -18,11 +18,11 @@ namespace WindowsGame1
 {
     class FullMenu: Menu
     {
-        private Texture2D image;
-        private Texture2D cursor_image;
-        Dictionary<String, Player> players;
-        FlashText player1Start;
-        FlashText player2Start;
+        protected Texture2D image;
+        protected Texture2D cursor_image;
+        protected Dictionary<String, Player> players;
+        protected FlashText player1Start;
+        protected FlashText player2Start;
 
         public FullMenu(LevelManager Parent, InputController Input,ContentManager CM,  String assetName)
         {
@@ -37,6 +37,10 @@ namespace WindowsGame1
             image = CM.Load<Texture2D>(assetName);
             cursor_image = CM.Load<Texture2D>("laser");
         }
+
+
+        public FullMenu()
+        { }
 
 
         public FullMenu(LevelManager Parent, Dictionary<String, Player> Players, ContentManager CM, String assetName, int x, int y, int xprime, int yprime)
