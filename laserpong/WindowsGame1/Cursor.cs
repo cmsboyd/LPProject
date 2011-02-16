@@ -85,10 +85,10 @@ namespace WindowsGame1
 
         public void Update()
         {
-            if (!parent.isFiring())
-            {
+            //if (!parent.isFiring())
+            //{
                 position += 15* input.LStickPosition();
-            }
+            //}
 
             FixPosition();
 
