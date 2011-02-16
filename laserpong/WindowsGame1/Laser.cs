@@ -242,9 +242,13 @@ namespace WindowsGame1
 
         public void Draw(SpriteBatch batch)
         {
-            DrawLaserForParticlePair(head, tail, batch);
-
             LaserParticle current = head;
+            while (current.Next != null) {
+                DrawLaserForParticlePair(current, current.Next, batch);
+                current = current.Next;
+            }
+
+            current = head;
             while (current != null) {
                 current.Draw(batch, laser, Color.White);
                 current = current.Next;
@@ -253,14 +257,17 @@ namespace WindowsGame1
 
         private void DrawLaserForParticlePair(LaserParticle a, LaserParticle b, SpriteBatch batch)
         {
-            float radians = (float)Math.Atan2(b.Velocity.Y, b.Velocity.X);
+
+            Vector2 direction = b.Position - a.Position;
+
+            float radians = (float)Math.Atan2(direction.Y, direction.X);
             float length = Vector2.Distance(b.Position, a.Position);
 
             Rectangle dest = new Rectangle((int)b.Position.X, (int)b.Position.Y - 1, (int)length, 2);
             /* texture is a 'CIRCLE', so pull a chunk out of it! */
             Rectangle source = new Rectangle(5, 5, 1, 1);
 
-            batch.Draw(laser, dest, source, color, radians, Vector2.Zero, SpriteEffects.None, 1f);
+            batch.Draw(laser, dest, source, color, radians, new Vector2(0, 1), SpriteEffects.None, 1f);
         }
     }
 }
