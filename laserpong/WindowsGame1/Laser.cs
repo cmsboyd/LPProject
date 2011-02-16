@@ -257,7 +257,7 @@ namespace WindowsGame1
         private void DrawLaserForParticlePair(LaserParticle a, LaserParticle b, SpriteBatch batch)
         {
 
-            Vector2 direction = b.Position - a.Position;
+            Vector2 direction = a.Position - b.Position;
 
             float radians = (float)Math.Atan2(direction.Y, direction.X);
             float length = Vector2.Distance(b.Position, a.Position);
