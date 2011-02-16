@@ -26,7 +26,7 @@ namespace WindowsGame1
         private Color color;
 
         public float Length { get { return Vector2.Distance(head.Position, tail.Position); } }
-        public float Orientation { get { return (float)Math.Atan2(tail.Velocity.X, tail.Velocity.Y); } }
+        public float RotationAboveXAxis { get { return (float)Math.Atan2(tail.Velocity.X, tail.Velocity.Y); } }
         public Vector2 Direction { get { return tail.Velocity; } }
         public Vector2 End { get { return tail.Position; } }
         public Vector2 Start { get { return head.Position; } }
