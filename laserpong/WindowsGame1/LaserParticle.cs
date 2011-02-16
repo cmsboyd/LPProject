@@ -73,28 +73,8 @@ namespace WindowsGame1
 
                 /* Recurse! */
                 SplitIfNecessary(before, insertion);
-                //insertion.countToHead();
                 SplitIfNecessary(insertion, after);
-                //insertion.countToTail();
             }
-        }
-
-        public int countToHead()
-        {
-            if (prev == null) {
-                return 0;
-            }
-
-            return prev.countToHead() + 1;
-        }
-
-        public int countToTail()
-        {
-            if (next == null) {
-                return 0;
-            }
-
-            return next.countToTail() + 1;
         }
 
         private static bool ShouldParticlesSplit(LaserParticle a, LaserParticle b)
