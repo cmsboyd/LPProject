@@ -141,79 +141,21 @@ namespace WindowsGame1
             /* Is this a laser we're generating? Don't bother! */
             if (m_collisions.ContainsValue(l)) { return; }
 
-            Laser generating;
-
-            Vector2 u = l.End - l.Start;
-            Vector2 v = surfaceLineSegment.End - surfaceLineSegment.Start;
-            Vector2 w = l.Start - surfaceLineSegment.Start;
-
-             // Do we need to flip?
-            Vector2 vPerp = new Vector2(-v.Y, v.X);
-            vPerp.Normalize();
-
-            if ((Vector2.Dot(l.Start - surfaceLineSegment.Start, vPerp)) > 0) {
-                // Need to flip!!
-                v = surfaceLineSegment.Start - surfaceLineSegment.End;
-            }
-
-            float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
-
             Vector2? pIntersectNullable = l.FindIntersectionPoint(surfaceLineSegment);
             if (pIntersectNullable == null) {
                 return;
             }
 
             Vector2 pIntersect = (Vector2)pIntersectNullable;
-            
+
+            Laser generating;
+
             // Have we already started a laser for this collision?
             if (!m_collisions.ContainsKey(l))
             {
-                Vector2 direction = surfaceLineSegment.NormalizedDirection();
-                Vector2 normal;
-                normal.X = -direction.Y;
-                normal.Y = direction.X;
-
-                if (m_type == SurfaceType.Refractive)
-                {
-                    if (Vector2.Dot(normal, l.Direction) < 0) {
-                        normal = -normal;
-                    }
-
-                    /* Need 3d vectors for rotations and cross products! */
-                    Vector3 direction3d = new Vector3(l.Direction, 0f);
-                    direction3d.Normalize();
-
-                    Vector3 normal3d = new Vector3(normal, 0f);
-                    /* Already normalized! */
-
-                    Vector3 cross = Vector3.Cross(direction3d, normal3d);
-                    bool incidentToNormalClockwiseRotation = (cross.Z > 0);
-
-                    /* If direction -> normal is a CLOCKWISE rotation, then
-                     * normal -> refractedDirection is a COUNTER-CLOCKWISE rotation. You will find this
-                     * by the negating of theta2 below. */
-                    
-
-                    float incidentTheta = (float)Math.Acos(Vector3.Dot(direction3d, normal3d));
-                    float refractedTheta = incidentTheta / 2;
-
-                    if (incidentToNormalClockwiseRotation) {
-                        refractedTheta = -refractedTheta; /* See above! */
-                    }
-
-                    Vector3 refractedDirection3d = Vector3.Transform(normal3d, Matrix.CreateRotationZ(refractedTheta));
-                    Vector2 refractedDirection = new Vector2(refractedDirection3d.X, refractedDirection3d.Y);
-
-                    generating = new Laser(pIntersect, refractedDirection, l.Color);
-                }
-                else
-                {
-                    Vector2 newDirection = Vector2.Reflect(l.Direction, normal);
-                    generating = new Laser(pIntersect, newDirection, l.Color);
-                }
-
                 if (m_type == SurfaceType.Reflective || m_type == SurfaceType.Refractive)
                 {
+                    generating = new Laser(pIntersect, calculateBounceDirection(l), l.Color);
                     parent.AddLaser(generating);
                 }
                 m_collisions.Add(l, generating);
@@ -229,6 +171,50 @@ namespace WindowsGame1
             }
 
             m_handledCollision.Add(l);
+        }
+
+        private Vector2 calculateBounceDirection(Laser l)
+        {
+            Vector2 direction = surfaceLineSegment.NormalizedDirection();
+            Vector2 normal;
+            normal.X = -direction.Y;
+            normal.Y = direction.X;
+
+            if (m_type == SurfaceType.Refractive) {
+                if (Vector2.Dot(normal, l.Direction) < 0) {
+                    normal = -normal;
+                }
+
+                /* Need 3d vectors for rotations and cross products! */
+                Vector3 direction3d = new Vector3(l.Direction, 0f);
+                direction3d.Normalize();
+
+                Vector3 normal3d = new Vector3(normal, 0f);
+                /* Already normalized! */
+
+                Vector3 cross = Vector3.Cross(direction3d, normal3d);
+                bool incidentToNormalClockwiseRotation = (cross.Z > 0);
+
+                /* If direction -> normal is a CLOCKWISE rotation, then
+                 * normal -> refractedDirection is a COUNTER-CLOCKWISE rotation. You will find this
+                 * by the negating of theta2 below. */
+
+
+                float incidentTheta = (float)Math.Acos(Vector3.Dot(direction3d, normal3d));
+                float refractedTheta = incidentTheta / 2;
+
+                if (incidentToNormalClockwiseRotation) {
+                    refractedTheta = -refractedTheta; /* See above! */
+                }
+
+                Vector3 refractedDirection3d = Vector3.Transform(normal3d, Matrix.CreateRotationZ(refractedTheta));
+                Vector2 refractedDirection = new Vector2(refractedDirection3d.X, refractedDirection3d.Y);
+
+                return refractedDirection;
+            }
+
+            return Vector2.Reflect(l.Direction, normal);
+                
         }
 
         public void deleteLasers(Level parent)
