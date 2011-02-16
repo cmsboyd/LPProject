@@ -25,8 +25,8 @@ namespace WindowsGame1
         {
             width = 1024;
             height = 768;
-            reflect_limit = 5;
-            refract_limit = 5;
+            reflect_limit = 2;
+            refract_limit = 2;
             absorb_limit = 10;
             id = ID;
             m_content = contentMangager;

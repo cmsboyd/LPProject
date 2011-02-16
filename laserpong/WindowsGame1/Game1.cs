@@ -52,8 +52,8 @@ namespace WindowsGame1
             gamemanager = new LevelManager(this.Content);
             gamemanager.addPuzzleLevel(new PuzzleLevel(this.Content, gamemanager, "Puzzle Level 1"));
             gamemanager.addPuzzleLevel(new PuzzleLevel(this.Content, gamemanager, "Puzzle Level 2"));           
-            gamemanager.addLevel(new PrismBattleLevel(this.Content, gamemanager, "Default Prism Battle Level"));
-            gamemanager.addLevel(new HordeLevel(this.Content, gamemanager, "Default Horde Level"));
+           // gamemanager.addLevel(new PrismBattleLevel(this.Content, gamemanager, "Default Prism Battle Level"));
+            //gamemanager.addLevel(new HordeLevel(this.Content, gamemanager, "Default Horde Level"));
             gamemanager.addMenu(gamemanager.mainmenu());
 
             

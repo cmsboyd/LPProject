@@ -11,7 +11,7 @@ namespace WindowsGame1
         LevelManager parent;
 
 
-        public void execute()
+        public override void execute()
         {
             parent.currentLevel = target;
 

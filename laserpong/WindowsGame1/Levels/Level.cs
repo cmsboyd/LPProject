@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace WindowsGame1
 {
-    class Level
+    class Level :ToggleSet
     {
 
         public String id;
@@ -57,14 +57,15 @@ namespace WindowsGame1
         protected ContentManager m_content;
 
 
-        public enum WallType
+      public enum WallType
     {
             FullAbsorb,
             FullReflect,
             SideReflect,
-            UpDownReflect
+            UpDownReflect,
+            DiagonalReflectingOctagon
             
-    }
+    } 
 
         public Level()
         {
@@ -422,16 +423,16 @@ namespace WindowsGame1
         {
             AddTurrets();
 
-            AddTower("Up_Left", new Tower("Up_Left", this, new Vector2(20, 20)));
-            AddTower("Up_Right", new Tower("Up_Right", this, new Vector2(width - 31, 20)));
-            AddTower("Down_Left", new Tower("Down_Left", this, new Vector2(20, height - 32)));
-            AddTower("Down_Right", new Tower("Down_Right", this, new Vector2(width - 31, height - 32)));
-
-
             switch (wallSetting)
             {
 
                 case WallType.FullAbsorb:
+
+                    AddTower("Up_Left", new Tower("Up_Left", this, new Vector2(20, 20)));
+                    AddTower("Up_Right", new Tower("Up_Right", this, new Vector2(width - 31, 20)));
+                    AddTower("Down_Left", new Tower("Down_Left", this, new Vector2(20, height - 32)));
+                    AddTower("Down_Right", new Tower("Down_Right", this, new Vector2(width - 31, height - 32)));
+
 
                     AddSurface(new Surface(towers["Up_Left"], towers["Up_Right"], Surface.SurfaceType.Absorbant, this));
                     AddSurface(new Surface(towers["Up_Left"], towers["Down_Left"], Surface.SurfaceType.Absorbant, this));
@@ -442,6 +443,12 @@ namespace WindowsGame1
 
                 case WallType.FullReflect:
 
+                    AddTower("Up_Left", new Tower("Up_Left", this, new Vector2(20, 20)));
+                    AddTower("Up_Right", new Tower("Up_Right", this, new Vector2(width - 31, 20)));
+                    AddTower("Down_Left", new Tower("Down_Left", this, new Vector2(20, height - 32)));
+                    AddTower("Down_Right", new Tower("Down_Right", this, new Vector2(width - 31, height - 32)));
+
+
                     AddSurface(new Surface(towers["Up_Left"], towers["Up_Right"], Surface.SurfaceType.Reflective, this));
                     AddSurface(new Surface(towers["Up_Left"], towers["Down_Left"], Surface.SurfaceType.Reflective, this));
                     AddSurface(new Surface(towers["Up_Right"], towers["Down_Right"], Surface.SurfaceType.Reflective, this));
@@ -450,6 +457,12 @@ namespace WindowsGame1
                     break;
 
                 case WallType.SideReflect:
+
+                    AddTower("Up_Left", new Tower("Up_Left", this, new Vector2(20, 20)));
+                    AddTower("Up_Right", new Tower("Up_Right", this, new Vector2(width - 31, 20)));
+                    AddTower("Down_Left", new Tower("Down_Left", this, new Vector2(20, height - 32)));
+                    AddTower("Down_Right", new Tower("Down_Right", this, new Vector2(width - 31, height - 32)));
+
 
                     AddSurface(new Surface(towers["Up_Left"], towers["Up_Right"], Surface.SurfaceType.Absorbant, this));
                     AddSurface(new Surface(towers["Up_Left"], towers["Down_Left"], Surface.SurfaceType.Reflective, this));
@@ -460,6 +473,12 @@ namespace WindowsGame1
 
                 case WallType.UpDownReflect:
 
+                    AddTower("Up_Left", new Tower("Up_Left", this, new Vector2(20, 20)));
+                    AddTower("Up_Right", new Tower("Up_Right", this, new Vector2(width - 31, 20)));
+                    AddTower("Down_Left", new Tower("Down_Left", this, new Vector2(20, height - 32)));
+                    AddTower("Down_Right", new Tower("Down_Right", this, new Vector2(width - 31, height - 32)));
+
+
                     AddSurface(new Surface(towers["Up_Left"], towers["Up_Right"], Surface.SurfaceType.Reflective, this));
                     AddSurface(new Surface(towers["Up_Left"], towers["Down_Left"], Surface.SurfaceType.Absorbant, this));
                     AddSurface(new Surface(towers["Up_Right"], towers["Down_Right"], Surface.SurfaceType.Absorbant, this));
@@ -467,6 +486,26 @@ namespace WindowsGame1
 
                     break;
 
+                case WallType.DiagonalReflectingOctagon:
+
+                    AddTower("TopLeft", new Tower("TopLeft", this, new Vector2((width-40)/4 + 20, 20)));
+                    AddTower("TopRight", new Tower("TopRight", this, new Vector2(3* (width-40) / 4 + 20, 20)));
+                    AddTower("LeftTop", new Tower("LeftTop", this, new Vector2(20, (height-40)/3 + 20)));
+                    AddTower("LeftBottom", new Tower("LeftBottom", this, new Vector2(20, 2*  (height-40) / 3 + 20)));
+                    AddTower("BottomLeft", new Tower("BottomLeft", this, new Vector2((width - 40) / 4 + 20, height - 20)));
+                    AddTower("BottomRight", new Tower("BottomRight", this, new Vector2(3 * (width - 40) / 4, height - 20)));
+                    AddTower("RightBottom", new Tower("RightBottom", this, new Vector2(width - 20, 2 * (height - 40) / 3 + 20)));
+                    AddTower("RightTop", new Tower("RightTop", this, new Vector2(width - 20, (height - 40) / 3 + 20)));
+
+                    AddSurface(new Surface(towers["TopLeft"], towers["TopRight"], Surface.SurfaceType.Absorbant, this));
+                    AddSurface(new Surface(towers["RightTop"], towers["TopRight"], Surface.SurfaceType.Reflective, this));
+                    AddSurface(new Surface(towers["BottomLeft"], towers["BottomRight"], Surface.SurfaceType.Absorbant, this));
+                    AddSurface(new Surface(towers["LeftTop"], towers["TopLeft"], Surface.SurfaceType.Reflective, this));
+                    AddSurface(new Surface(towers["LeftTop"], towers["LeftBottom"], Surface.SurfaceType.Absorbant, this));
+                    AddSurface(new Surface(towers["RightBottom"], towers["BottomRight"], Surface.SurfaceType.Reflective, this));
+                    AddSurface(new Surface(towers["RightTop"], towers["RightBottom"], Surface.SurfaceType.Absorbant, this));
+                    AddSurface(new Surface(towers["LeftBottom"], towers["BottomLeft"], Surface.SurfaceType.Reflective, this));
+                    break;
             }
         
         
@@ -498,6 +537,27 @@ namespace WindowsGame1
             if (victory.Display) victory.Draw(batch);
         }
 
+        public void SetValue(WallType type)
+        {
+            wallSetting = type;
+        }
+
+        public void SetValue(Surface.SurfaceType type, int amount)
+        {
+            switch (type)
+            {
+                case Surface.SurfaceType.Absorbant:
+                    absorb_limit = amount;
+                    break;
+                case Surface.SurfaceType.Refractive:
+                    refract_limit = amount;
+                    break;
+                case Surface.SurfaceType.Reflective:
+                    reflect_limit = amount;
+                    break;
+            }
+        }
 
     }
+
 }

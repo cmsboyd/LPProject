@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LineSegment.cs" />
+    <Compile Include="FullLevelMenu.cs" />
     <Compile Include="LaserParticle.cs" />
     <Compile Include="Structures\ColorPrism.cs" />
     <Compile Include="FlashText.cs" />
@@ -105,6 +106,10 @@
     <Compile Include="Laser.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="LevelManager.cs" />
+    <Compile Include="ToggleWallsButton.cs" />
+    <Compile Include="ToggleLimitsButton.cs" />
+    <Compile Include="ToggleList.cs" />
+    <Compile Include="ToggleSet.cs" />
     <Compile Include="UI\FullMenu.cs" />
     <Compile Include="UI\Menu.cs" />
     <Compile Include="UI\AddMenuItem.cs" />

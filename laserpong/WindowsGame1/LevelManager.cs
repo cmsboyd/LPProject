@@ -42,15 +42,11 @@ namespace WindowsGame1
             font = theCM.Load<SpriteFont>("Text");
             LevelMenu = new FullMenu(this, players, CM, "Main menu", 400, 400, 0, 20);
             PuzzleMenu = new FullMenu(this, players, CM, "Main menu", 400, 400, 0 , 20);
-            blankLevel = new BattleLevel(CM, this, "Blank Battle Level");
-            addLevel(blankLevel);
-          //  setLevel(blankLevel);
+            LevelMenu.addMenuItem(new AddMenuItem(this, new FullLevelMenu(this, new BattleLevel(CM, this, "Basic Battle Level"), input, CM, players, 400, 400, 0, 20), "Battle Level"));
             LevelMenu.addMenuItem(new AddMenuItem(this, PuzzleMenu, "Puzzle Levels"));
-           // pauseMenu = new Menu(this, input);
-           // pauseMenu.addMenuItem(new MenuItem("Pause"));
-           // VictoryMenu = new Menu(this, input);
-           // VictoryMenu.addMenuItem(new ReplaceMenuItem(this, LevelMenu, "Victory!"));
-        //    logo = new SplashImage(theCM, "LogoSplash", 2000f);
+            LevelMenu.addMenuItem(new AddMenuItem(this, new FullLevelMenu(this, new HordeLevel(CM, this, "Horde Level"), input, CM, players, 400, 400, 0, 20), "Horde Level"));
+            LevelMenu.addMenuItem(new AddMenuItem(this, new FullLevelMenu(this, new PrismBattleLevel(CM, this, "Prism-Battle Level") , input, CM, players, 400, 400, 0, 20), "Prism-Battle Level"));
+         
         }
 
         public void addLevel(Level add)
