@@ -93,18 +93,8 @@ namespace WindowsGame1
 
         public bool IsColliding(LineSegment segment)
         {
-            Vector2 u = End - Start;
-            Vector2 v = segment.End - segment.Start;
-            Vector2 w = Start - segment.Start;
-
-            float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
-            if (tIntersect > 0f && tIntersect < 1f) {
-                float sIntersect = (u.X * w.Y - u.Y * w.X) / (u.X * v.Y - u.Y * v.X);
-                if (sIntersect > 0f && sIntersect < 1f) {
-                    return true;
-                }
-            }
-            return false;
+            float tIntersect = findIntersection(segment);
+            return (tIntersect >= 0f);
         }
 
         public bool IsColliding(BoundingBox boundingBox)
@@ -123,6 +113,32 @@ namespace WindowsGame1
             return false;
         }
 
+        public float Chomp(LineSegment segment)
+        {
+            if (!IsColliding(segment)) {
+                return 0f;
+            }
+
+            float amountToChomp = findIntersection(segment);
+
+            Chomp(amountToChomp);
+            return amountToChomp;
+        }
+
+        public Vector2? FindIntersectionPoint(LineSegment segment) {
+            float tIntersect = findIntersection(segment);
+
+            if (tIntersect < 0) {
+                return null;
+            }
+
+            Vector2 u = End - Start;
+            u.Normalize();
+            Vector2 pIntersect = Start + tIntersect * u;
+
+            return pIntersect;
+        }
+
         public float Chomp(BoundingBox boundingBox)
         {
             if (!IsColliding(boundingBox)) {
@@ -136,6 +152,30 @@ namespace WindowsGame1
 
             Chomp(amountToChomp);
             return amountToChomp;
+        }
+
+        private float findIntersection(LineSegment segment)
+        {
+            Vector2 u = End - Start;
+            Vector2 v = segment.End - segment.Start;
+            Vector2 w = Start - segment.Start;
+
+            Vector2 vPerp = new Vector2(-v.Y, v.X);
+            vPerp.Normalize();
+
+            if ((Vector2.Dot(Start - segment.Start, vPerp)) > 0) {
+                // Need to flip!!
+                //v = segment.Start - segment.End;
+            }
+
+            float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
+            if (tIntersect >= 0f && tIntersect <= 1f) {
+                float sIntersect = (u.X * w.Y - u.Y * w.X) / (u.X * v.Y - u.Y * v.X);
+                if (sIntersect > 0f && sIntersect < 1f) {
+                    return tIntersect * Length;
+                }
+            }
+            return -1f;
         }
 
         private float findIntersection(BoundingBox boundingBox)
@@ -171,15 +211,13 @@ namespace WindowsGame1
 
         public void Chomp(float amount)
         {
+            System.Diagnostics.Debug.WriteLine("CHOMPING " + amount);
             if (amount >= Length) {
                 /* Kill the laser! */
                 head.Position = tail.Position;
                 head.Velocity = Vector2.Zero;
                 tail.Velocity = Vector2.Zero;
                 signalLaserEliminated();
-            }
-            if (amount <= 0) {
-                System.Diagnostics.Debug.WriteLine("WTF??");
             }
             Vector2 headVelocity = head.Velocity;
             headVelocity.Normalize();

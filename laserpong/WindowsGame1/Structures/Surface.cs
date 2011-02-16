@@ -158,7 +158,12 @@ namespace WindowsGame1
 
             float tIntersect = (v.Y * w.X - v.X * w.Y) / (v.X * u.Y - v.Y * u.X);
 
-            Vector2 pIntersect = l.Start + tIntersect * u;
+            Vector2? pIntersectNullable = l.FindIntersectionPoint(surfaceLineSegment);
+            if (pIntersectNullable == null) {
+                return;
+            }
+
+            Vector2 pIntersect = (Vector2)pIntersectNullable;
             
             // Have we already started a laser for this collision?
             if (!m_collisions.ContainsKey(l))
@@ -215,13 +220,13 @@ namespace WindowsGame1
             } else {
                 generating = m_collisions[l];
             }
-            
+
+            float chompdAmount = l.Chomp(surfaceLineSegment);
+
             if (m_type == SurfaceType.Reflective || m_type == SurfaceType.Refractive)
             {
-                generating.AdjustLength(u.Length() * tIntersect);
+                generating.AdjustLength(chompdAmount);
             }
-
-            l.Chomp(u.Length() * tIntersect);
 
             m_handledCollision.Add(l);
         }
