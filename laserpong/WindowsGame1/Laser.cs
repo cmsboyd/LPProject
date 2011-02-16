@@ -226,7 +226,6 @@ namespace WindowsGame1
 
         private void Chomp(float amount)
         {
-            System.Diagnostics.Debug.WriteLine("CHOMPING " + amount);
             if (amount >= Length) {
                 /* Kill the laser! */
                 head.Position = tail.Position;
