@@ -31,6 +31,8 @@ namespace WindowsGame1
         public bool lit_up;
         private BoundingBox bounds;
 
+        public BoundingBox Bounds { get { return bounds; } }
+
         Level parent;
 
         public Tower(Level Parent, Vector2 Position)
@@ -137,25 +139,20 @@ namespace WindowsGame1
         }
 
 
-        public void isColliding(Laser laser)
+        public void HandleCollision(Laser laser)
         {
-            Vector2 normalizedLaserDirection = laser.Direction;
-            normalizedLaserDirection.Normalize();
-
-            /* Best. Name. Evar! */
-            Ray laser_ray = new Ray(new Vector3(laser.End, 0), new Vector3(normalizedLaserDirection, 0));
-
-            float? intersection = bounds.Intersects(laser_ray);
-            if (intersection > 0 && intersection < laser.Length)
-            {
-                laser.Chomp(laser.Length - (float)intersection);
-                if (laser.Color == Color.White) health++;
-                else health--;
-                if (health > max_health) health = max_health;
+            if (laser.Color == Color.White) {
+                health++;
+            } else {
+                health--;
             }
+
+            if (health > max_health) {
+                health = max_health;
+            }
+
+            laser.Chomp(bounds);
         }
-
-
 
     }
 }

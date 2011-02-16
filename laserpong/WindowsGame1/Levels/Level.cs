@@ -375,7 +375,9 @@ namespace WindowsGame1
             
             foreach (Laser l in lasers.ToArray())
             {
-                s.isColliding(l);
+                if (s.built && l.IsColliding(s.Bounds)) {
+                    s.HandleCollision(l);
+                }
             }
 
         }
