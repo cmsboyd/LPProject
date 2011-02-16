@@ -411,7 +411,7 @@ namespace WindowsGame1
         public void HandleCollision(Laser laser)
         {
             /* Don't eat our own laser! */
-            if (m_generating == laser) { return; }
+            //if (m_generating == laser) { return; }
 
             if (laser.Color == Color.White) health+=2;
             else health-=5;
