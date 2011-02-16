@@ -37,6 +37,7 @@ namespace WindowsGame1
         {
             parent = Parent;
             position = Position;
+            lit_up = false;
 
         }
 
@@ -49,6 +50,7 @@ namespace WindowsGame1
             color = Color.White;
             max_health = 1000000000;
             health = max_health;
+            lit_up = false;
         }
 
         public Tower(string Id, Level Parent, Vector2 Position, Laser_Turret Owner)
@@ -62,6 +64,7 @@ namespace WindowsGame1
             bounds = new BoundingBox(new Vector3(position.X-30, position.Y-30, -1), new Vector3(position.X + 30, position.Y + 30, 1));
 
             color = new Color(owner.color.ToVector3() + new Vector3(-.5f, -.5f, -.5f));
+            lit_up = false;
             
         }
 

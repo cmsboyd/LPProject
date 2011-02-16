@@ -33,7 +33,9 @@ namespace WindowsGame1
         protected bool display;
         public bool Display { get { return display; } }
 
-        public SplashText() { }
+        public SplashText() {
+            effects = SpriteEffects.None;
+        }
 
         public SplashText(SpriteFont Font, String assetName, float Time){
 
@@ -47,6 +49,7 @@ namespace WindowsGame1
             color = Color.Red;
             scale = 1f;
             text = assetName;
+            effects = SpriteEffects.None;
 
         }
 

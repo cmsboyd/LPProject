@@ -23,7 +23,7 @@ namespace WindowsGame1
         InputController input;
         public Color color;
         Laser_Turret parent;
-        private Vector2 c_movement;
+        //private Vector2 c_movement;
         private Texture2D image;
         private string player;
         Level region;
@@ -35,7 +35,7 @@ namespace WindowsGame1
         private Vector2 c_temp;
         private bool c_build;
         Surface.SurfaceType c_build_type = Surface.SurfaceType.Absorbant;
-        private bool tower_selected;
+        //private bool tower_selected;
 
 
 

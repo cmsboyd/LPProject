@@ -22,7 +22,7 @@ namespace WindowsGame1
         private float currentTime;
         private Texture2D image;
         private bool display;
-        private Color color;
+        //private Color color;
         public bool Display { get { return display; } }
 
         public SplashImage(ContentManager CM, String assetName, float Time){

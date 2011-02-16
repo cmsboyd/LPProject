@@ -27,9 +27,9 @@ namespace WindowsGame1
         Menu LevelMenu;
         public Menu PuzzleMenu;
         public SpriteFont font;
-        Level blankLevel;
-        Menu pauseMenu;
-        public Menu VictoryMenu;
+        //Level blankLevel;
+        Menu pauseMenu = null;
+        //public Menu VictoryMenu;
       //  private SplashImage logo;
         Dictionary<String, Player> players = new Dictionary<String, Player>();
 

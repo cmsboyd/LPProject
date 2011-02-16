@@ -30,22 +30,6 @@ namespace WindowsGame1
 
         }
 
-
-        public Vector2 getPosition()
-        {
-            return position;
-        }
-
-
-        public void loadImage(ContentManager theCm)
-        {
-
-            image = theCm.Load<Texture2D>("surface_corner");
-
-
-        }
-
-
         public override void Draw(SpriteBatch batch)
         {
 

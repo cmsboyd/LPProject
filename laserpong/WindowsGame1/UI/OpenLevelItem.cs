@@ -7,8 +7,17 @@ namespace WindowsGame1
 {
     class OpenLevelItem: MenuItem
     {
-        Level target;
-        LevelManager parent;
+        private Level target;
+        private LevelManager parent;
+
+        public Level Target { get { return target; } set { target = value; } }
+        public LevelManager Parent { get { return parent; } set { parent = value; } }
+
+        public OpenLevelItem()
+        {
+            target = null;
+            parent = null;
+        }
 
 
         public override void execute()

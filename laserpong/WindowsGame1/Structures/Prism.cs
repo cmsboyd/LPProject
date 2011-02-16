@@ -24,10 +24,10 @@ namespace WindowsGame1
         public Vector2 position;
         protected Color color;
         protected Level parent;
-        public string id;
+        //public string id;
         public bool lit_up = false;
         protected BoundingBox bounds;
-        protected Color temp_color;
+        //protected Color temp_color;
 
         public BoundingBox BoundingBox { get { return bounds; } }
 

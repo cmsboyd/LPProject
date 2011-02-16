@@ -70,6 +70,7 @@ namespace WindowsGame1
             id = "Player1";
             color = Color.Red;
             cursor = new Cursor(this, input, m_parent);
+            m_rotation = 0;
 
 
         }
@@ -89,6 +90,7 @@ namespace WindowsGame1
            absorb_amount=0;
            reflect_amount=0;
            refract_amount=0;
+           m_rotation = 0;
 
             switch (id)
             {
@@ -142,6 +144,7 @@ namespace WindowsGame1
             absorb_amount = 0;
             reflect_amount = 0;
             refract_amount = 0;
+            m_rotation = 0;
 
             switch (input.getMode())
             {

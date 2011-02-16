@@ -18,7 +18,7 @@ namespace WindowsGame1
 {
     class FullLevelMenu:FullMenu
     {
-        protected Level_Button level;
+        //protected Level_Button level;
         protected ToggleWallsButton wallType;
         protected ToggleLimitsButton reflectiveAllowance;
         protected ToggleLimitsButton refractiveAllowance;

@@ -22,7 +22,7 @@ namespace WindowsGame1
         public String id;
         public int width;
         public int height;
-        protected Texture2D background;
+        //protected Texture2D background;
         public List<Laser> lasers = new List<Laser>();
         protected List<Laser_Turret> turrets = new List<Laser_Turret>();
         protected List<Surface> surfaces = new List<Surface>();
@@ -44,7 +44,7 @@ namespace WindowsGame1
         public SpriteFont font;
         protected SplashImage start;
         protected SplashImage victory;
-        protected bool endingSequence;
+        //protected bool endingSequence;
         
 
 
