@@ -226,7 +226,6 @@ namespace WindowsGame1
 
         private void Chomp(float amount)
         {
-            System.Diagnostics.Debug.WriteLine("CHOMPING " + amount);
             if (amount >= Length) {
                 /* Kill the laser! */
                 head.Position = tail.Position;
@@ -242,13 +241,9 @@ namespace WindowsGame1
 
         public void Draw(SpriteBatch batch)
         {
-            LaserParticle current = head;
-            while (current.Next != null) {
-                DrawLaserForParticlePair(current, current.Next, batch);
-                current = current.Next;
-            }
+            DrawLaserForParticlePair(head, tail, batch);
 
-            current = head;
+            LaserParticle current = head;
             while (current != null) {
                 current.Draw(batch, laser, Color.White);
                 current = current.Next;
@@ -258,7 +253,7 @@ namespace WindowsGame1
         private void DrawLaserForParticlePair(LaserParticle a, LaserParticle b, SpriteBatch batch)
         {
 
-            Vector2 direction = b.Position - a.Position;
+            Vector2 direction = a.Position - b.Position;
 
             float radians = (float)Math.Atan2(direction.Y, direction.X);
             float length = Vector2.Distance(b.Position, a.Position);
