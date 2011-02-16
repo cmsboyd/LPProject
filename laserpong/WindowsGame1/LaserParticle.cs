@@ -11,6 +11,8 @@ namespace WindowsGame1
     class LaserParticle
     {
         private const float SPEED = 700.0f;
+        private const int SPLIT_THREASHOLD = 10;
+        private const int SPLIT_THREASHOLD_SQUARED = SPLIT_THREASHOLD * SPLIT_THREASHOLD;
 
         public Vector2 Position { get { return position; } set { position = value;} }
         public Vector2 Velocity { 
@@ -26,6 +28,7 @@ namespace WindowsGame1
 
         private Vector2 position;
         private Vector2 velocity;
+        private float power;
 
         private LaserParticle next;
         private LaserParticle prev;
@@ -46,11 +49,74 @@ namespace WindowsGame1
             position += velocity * (float)t.ElapsedGameTime.TotalSeconds;
         }
 
+        public void Split()
+        {
+            if (next != null) {
+                LaserParticle after = next;
+                SplitIfNecessary(this, after);
+            }
+        }
+
         public void Draw(SpriteBatch batch, Texture2D color, Color bobbleColor)
         {
             Rectangle destination = new Rectangle((int)position.X - 2, (int)position.Y - 2, 4, 4);
 
             batch.Draw(color, destination, bobbleColor);
+        }
+
+        private static void SplitIfNecessary(LaserParticle before, LaserParticle after)
+        {
+            if (ShouldParticlesSplit(before, after)) {
+
+                LaserParticle insertion = AverageParticles(before, after);
+                InsertParticle(before, after, insertion);
+
+                /* Recurse! */
+                SplitIfNecessary(before, insertion);
+                //insertion.countToHead();
+                SplitIfNecessary(insertion, after);
+                //insertion.countToTail();
+            }
+        }
+
+        public int countToHead()
+        {
+            if (prev == null) {
+                return 0;
+            }
+
+            return prev.countToHead() + 1;
+        }
+
+        public int countToTail()
+        {
+            if (next == null) {
+                return 0;
+            }
+
+            return next.countToTail() + 1;
+        }
+
+        private static bool ShouldParticlesSplit(LaserParticle a, LaserParticle b)
+        {
+            return (Vector2.DistanceSquared(a.Position, b.Position) > SPLIT_THREASHOLD_SQUARED);
+        }
+
+        private static LaserParticle AverageParticles(LaserParticle a, LaserParticle b)
+        {
+            return new LaserParticle((a.Position + b.Position) / 2, (a.Velocity + b.Velocity) / 2);
+        }
+
+        private static void InsertParticle(LaserParticle before, LaserParticle after, LaserParticle insertion)
+        {
+            // before.Prev already set
+            before.Next = insertion;
+
+            insertion.Prev = before;
+            insertion.Next = after;
+
+            after.Prev = insertion;
+            // after.Next already set
         }
     }
 }

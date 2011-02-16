@@ -92,6 +92,11 @@ namespace WindowsGame1
                 current.Update(t);
                 current = current.Next;
             }
+
+            while (current != null) {
+                current.Split();
+                current = current.Next;
+            }
         }
 
         public bool IsColliding(LineSegment segment)
@@ -262,7 +267,7 @@ namespace WindowsGame1
             float radians = (float)Math.Atan2(direction.Y, direction.X);
             float length = Vector2.Distance(b.Position, a.Position);
 
-            Rectangle dest = new Rectangle((int)b.Position.X, (int)b.Position.Y - 1, (int)length, 2);
+            Rectangle dest = new Rectangle((int)b.Position.X, (int)b.Position.Y - 1, (int)length + 1, 2);
             /* texture is a 'CIRCLE', so pull a chunk out of it! */
             Rectangle source = new Rectangle(5, 5, 1, 1);
 
