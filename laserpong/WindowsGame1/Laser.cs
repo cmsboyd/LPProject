@@ -93,6 +93,7 @@ namespace WindowsGame1
                 current = current.Next;
             }
 
+            current = head;
             while (current != null) {
                 current.Split();
                 current = current.Next;
