@@ -87,8 +87,11 @@ namespace WindowsGame1
 
         public void Update(GameTime t)
         {
-            head.Update(t);
-            tail.Update(t);
+            LaserParticle current = head;
+            while (current != null) {
+                current.Update(t);
+                current = current.Next;
+            }
         }
 
         public bool IsColliding(LineSegment segment)
@@ -192,6 +195,18 @@ namespace WindowsGame1
             return (float)intersection;
         }
 
+        public void AppendParticle(LaserParticle addition)
+        {
+            LaserParticle penultimate = tail;
+
+            // penultimate.Prev already is correct
+            penultimate.Next = addition;
+            addition.Prev = penultimate;
+            addition.Next = null;
+
+            tail = addition;
+        }
+
         /* SOON TO BE DEPRECATED LASER API */
 
         public void IncreaseLength(TimeSpan timeDelta)
@@ -209,7 +224,7 @@ namespace WindowsGame1
             tail.Position -= tailVelocity * amount;
         }
 
-        public void Chomp(float amount)
+        private void Chomp(float amount)
         {
             System.Diagnostics.Debug.WriteLine("CHOMPING " + amount);
             if (amount >= Length) {
@@ -236,8 +251,11 @@ namespace WindowsGame1
 
             batch.Draw(laser, dest, source, color, radians, Vector2.Zero, SpriteEffects.None, 1f);
 
-            head.Draw(batch, laser, Color.White);
-            tail.Draw(batch, laser, Color.White);
+            LaserParticle current = head;
+            while (current != null) {
+                current.Draw(batch, laser, Color.White);
+                current = current.Next;
+            }
         }
     }
 }

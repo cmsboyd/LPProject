@@ -148,7 +148,7 @@ namespace WindowsGame1
 
             Vector2 pIntersect = (Vector2)pIntersectNullable;
 
-            Laser generating;
+            Laser generating = null;
 
             // Have we already started a laser for this collision?
             if (!m_collisions.ContainsKey(l))

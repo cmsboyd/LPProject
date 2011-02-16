@@ -381,7 +381,9 @@ namespace WindowsGame1
         {
             if (m_generating != null)
             {
-                m_generating.IncreaseLength(gameTime.ElapsedGameTime);
+                Vector2 velocity = Vector2.Transform(Vector2.UnitX, Matrix.CreateRotationZ(this.orientation));
+                LaserParticle newParticle = new LaserParticle(laserStart, velocity);
+                m_generating.AppendParticle(newParticle);
             }
         }
 
@@ -410,9 +412,6 @@ namespace WindowsGame1
 
         public void HandleCollision(Laser laser)
         {
-            /* Don't eat our own laser! */
-            //if (m_generating == laser) { return; }
-
             if (laser.Color == Color.White) health+=2;
             else health-=5;
             laser.Chomp(bounds);
