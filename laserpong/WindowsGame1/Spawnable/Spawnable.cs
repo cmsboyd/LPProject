@@ -25,6 +25,8 @@ namespace WindowsGame1
 
         public Vector2 Position {get{return position;}}
 
+        public BoundingBox Bounds { get { return getBounds(); } }
+
         protected float speed = .5f;
         protected Vector2 direction;
         protected float s_orientation = 0f;
@@ -136,14 +138,11 @@ namespace WindowsGame1
             s_color = newCol;
         }
 
-        public virtual void damage(Laser l)
+        public virtual void HandleCollision(Laser l)
         {
 
             health--;
             changeColor(l.Color);
-            
-
-
         }
 
         public virtual void damage(int dam)
@@ -157,7 +156,6 @@ namespace WindowsGame1
         {
             region.addScore(1);
             region.killed.Add(this);
-
         }
 
 
