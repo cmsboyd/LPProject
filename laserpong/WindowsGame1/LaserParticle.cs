@@ -48,7 +48,7 @@ namespace WindowsGame1
 
         public void Draw(SpriteBatch batch, Texture2D color, Color bobbleColor)
         {
-            Rectangle destination = new Rectangle((int)position.X - 5, (int)position.Y - 5, 10, 10);
+            Rectangle destination = new Rectangle((int)position.X - 2, (int)position.Y - 2, 4, 4);
 
             batch.Draw(color, destination, bobbleColor);
         }
